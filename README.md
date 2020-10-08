@@ -43,9 +43,9 @@ The others can be downloaded and install from the requirements file. The install
 
 Note that this project is meant for linux.
 
-1.  Make a new directory on your computer and name it `portal` or give it any name of your choice.
+1.  Make a new directory on your computer and name it `ALX-IMS` or give it any name of your choice.
 2.  Navigate to the directory you have created and open it in the terminal.
-3.  On the terminal type `git clone` and add this link <code>[repo](https://github.com/Arrotech/Portal/)</code> and the press `enter` to clone the remote repository to your local repository i.e `git clone 'link'`. Add the link without the quotation.
+3.  On the terminal type `git clone` and add this link <code>[repo](https://github.com/Arrotech/ALX-IMS/)</code> and the press `enter` to clone the remote repository to your local repository i.e `git clone 'link'`. Add the link without the quotation.
 4.  Navigate to the directory that has been cloned to your machine and open it in a terminal.
 5.  Create virtual environment by typing this in the terminal `virtualenv -p python3 venv`.
 6.  Run `pip install -r requirements.txt` on the terminal to install the dependencies.
