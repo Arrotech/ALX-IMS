@@ -1,80 +1,540 @@
 FORMAT: 1A
-HOST: https://polls.apiblueprint.org/
+HOST: https://alx-ims.herokuapp.com
 
 # ALX-IMS
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+This is a `restful web service` that handles `authenticates users`.
 
-## Questions Collection [/questions]
+#### Production/Test URL's
 
-### List All Questions [GET]
+1. `Test Url:` https://alx-ims.herokuapp.com
+2. `Production Url:` https://alx-ims.herokuapp.com
 
-+ Response 200 (application/json)
+#### Protocol Definition
+|Key                | Value                                        |
+|-------------------|----------------------------------------------|
+|Protocol           | HTTP                                         |
+|Method             | `POST GET PUT DELETE`                                          |
+|Request Body            | JSON                                         |
+|Response Body          | JSON                                         |
+|Authorization     | Bearer `<token>` |
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
+##### Default Error Codes
+|Key                | Value                                        |
+|-------------------|----------------------------------------------|
+|400           | Bad Request                                       |
+|401           | Unauthorized                                       |
+|403             | Forbidden                                       |
+|404            | Resource Not Found                                        |
+|405           | Method Not Allowed                                |
+|406     | Not Acceptable - You requested a format that isn’t json |
+|422     | Unable to process the contained instructions |
+|429     | Too Many Requests |
+|500     | Internal Server Error – We had a problem with our server. Try again later. |
+|503     | Service Unavailable – We’re temporarily offline for maintenance. Please try again later. |
 
-### Create a New Question [POST]
+# Users Account
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+A `User` can do the following:
+1. Create a new account.
+2. Login to their account.
+3. Get users information.
+4. Get access token using the refresh token.
+5. Access protected route.
+6. Reset Password.
+7. Confirm their email.
+
+### Create New Account [/api/v1/auth/register]
+
+This request enables an `user` to be able to `create a new account`.
+
+The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/auth/register`
+
+#### Headers
+
+The following should be passed as the header:
+
+1. `Content-Type:` application/json
+2. `Accept:` application/json
+
+#### Request Data Fields
+
+|Parameter             | Description                                  | Parameter Type | Sample values           |
+|----------------------|----------------------------------------------|----------------|-------------------------|
+|firstname             | User first name (`Mandatory`)                        | String         | John                    |
+|lastname              | User last name (`Mandatory`)                        | String         | Doe                     |
+|Phone                 | User phone number (`Mandatory`)                        | String         | 0712345678                     |
+|username              | Username should be unique (`Mandatory`)             | String         | Johndoe                 |
+|email                 | User email should be unique (`Mandatory`)           | String         | johndoe@example.com     |
+|password              | User password should be aleast 8 characters with special characters (`Mandatory`) | String | JohnDoeUFhgah!37 |
+
+
+**Sample request**
+
+```
+{
+    "firstname": "Peter",
+    "lastname": "Gitundu",
+    "phone": "0720930988",
+    "username": "Peter254",
+    "email": "petergitundu94@gmail.com",
+    "password": "Peter20930988!"
+}
+```
+
+#### Response Data Fields
+
+|Parameter             | Description                                  | Parameter Type | Sample values           |
+|----------------------|----------------------------------------------|----------------|-------------------------|
+|message               | message about the request                    | Object         | Account created successfully |
+|status                | response status code                         | Object         | 201                     |
+|user                  | user account information             | Object         | {...}                 |
+|date            | date when the request was created | Date (`TIMESTAMP`) | 2020-07-19 11:25:43.501510 |
+|firstname             | User first name | String         | John                    |
+|lastname              | User last name | String         | Doe                     |
+|username              | Username | String         | Johndoe                 |
+|email                 | User email | String         | johndoe@example.com     |
+|phone                 | User email | String         | 0712345678     |
+|password              | User password hashed password | String | pbkdf2:sha256:150000$Ryqas... |
+|is_confirmed                  | Whether the account has been confirmed           | Boolean         | False     |
+
+
+**Successful Sample response**
+
+```
+{
+    "message": "Account created successfully!",
+    "status": "201",
+    "user": {
+        "date": "2020-10-08 17:00:45.587859",
+        "email": "petergitundu94@gmail.com",
+        "firstname": "Peter",
+        "is_confirmed": false,
+        "lastname": "Gitundu",
+        "password": "pbkdf2:sha256:150000$VLg3eSYv$89fc0b38726aba71947671e081b87cdf0aad1a7485d4e7593d24280fea6f1121",
+        "phone": "0720930988",
+        "username": "Peter254"
+    }
+}
+```
+
+<span style="color:royalblue; font-size:18px;">**Try in console**</span>
+
+#### Register [POST]
 
 + Request (application/json)
 
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
+            "firstname": "Peter",
+            "lastname": "Gitundu",
+            "phone": "0720930988",
+            "username": "Peter254",
+            "email": "petergitundu94@gmail.com",
+            "password": "Peter20930988!"
         }
 
 + Response 201 (application/json)
 
-    + Headers
+    + Body
 
-            Location: /questions/2
+            {
+                "message": "Account created successfully!",
+                "status": "201",
+                "user": {
+                    "date": "2020-10-08 17:00:45.587859",
+                    "email": "petergitundu94@gmail.com",
+                    "firstname": "Peter",
+                    "is_confirmed": false,
+                    "lastname": "Gitundu",
+                    "password": "pbkdf2:sha256:150000$VLg3eSYv$89fc0b38726aba71947671e081b87cdf0aad1a7485d4e7593d24280fea6f1121",
+                    "phone": "0720930988",
+                    "username": "Peter254"
+                }
+            }
+            
+## Login [/api/v1/auth/login]
+
+This request enables user able to `login` in order to access `restricted endpoints`.
+
+```
+One must be logged in to carry out all protected activities
+```
+
+The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/auth/login`
+
+#### Headers
+
+The following should be passed as the header:
+
+1. `Content-Type:` application/json
+2. `Accept:` application/json
+
+#### Request Data Fields
+
+|Parameter             | Description                                  | Parameter Type | Sample values           |
+|----------------------|----------------------------------------------|----------------|-------------------------|
+|email                 | email that you registered with (`Mandatory`)           | String         | johndoe@example.com     |
+|password              | password that you registered with (`Mandatory`) | String | JohnDoeUFhgah!37 |
+
+
+**Sample request**
+
+```
+{
+    "email": "petergitundu94@gmail.com",
+    "password": "Peter20930988!"
+}
+```
+
+#### Response Data Fields
+
+|Parameter             | Description                                  | Parameter Type | Sample values           |
+|----------------------|----------------------------------------------|----------------|-------------------------|
+|message               | message about the request                    | Object         | Successfully logged in! |
+|status                | response status code                         | Object         | 200                     |
+|token                 | bearer token that should be passed to all future requests | Object         | eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI... |
+|refresh_token         | refresh token that should be used to get access token | Object         | eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI... |
+|user                  | user account information             | Object         | {...}                 |
+|date            | date when the login request was sent | Date (`TIMESTAMP`) | 2020-07-19 11:25:43.501510 |
+|firstname             | User first name | String         | John                    |
+|lastname              | User last name | String         | Doe                     |
+|username              | Username | String         | Johndoe                 |
+|email                 | User email | String         | johndoe@example.com     |
+|password              | User password hashed password | String | pbkdf2:sha256:150000$Ryqas... |
+|phone                  | User phone number | String         | 0712345678     |
+|user_id              | Autogenerated admin id | Numeric         | 1     |
+|is_confirmed                  | Whether the account has been confirmed           | Boolean         | False     |
+|confirmed_on                  | When the account was confirmed           | Date (`TIMESTAMP`)         | 2020-07-19 11:25:43.501510     |
+
+
+**Successful Sample response**
+
+```
+{
+    "message": "Successfully logged in!",
+    "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDIxNjU2NDksIm5iZiI6MTYwMjE2NTY0OSwianRpIjoiZGQ3Y2I1ODAtY2RkNC00ZDBmLWEyYWEtOWQyYWVmMzhjMzM1IiwiZXhwIjoxNjMzNzAxNjQ5LCJpZGVudGl0eSI6InBldGVyZ2l0dW5kdTk0QGdtYWlsLmNvbSIsInR5cGUiOiJyZWZyZXNoIn0.1jXz4Wm8PZE16n2dAz4L7ZYq93J96uaJrIYwLMMsDEU",
+    "status": "200",
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDIxNjU2NDksIm5iZiI6MTYwMjE2NTY0OSwianRpIjoiMTIxZTRiNWQtNWM0MC00NWQwLTkzNWQtNDIwNjZkNzFhZTgzIiwiZXhwIjoxNjMzNzAxNjQ5LCJpZGVudGl0eSI6InBldGVyZ2l0dW5kdTk0QGdtYWlsLmNvbSIsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.UgzHaKg1_CpAVR8r-z_fZZVSZlv-GmatJxOkgbwjtdY",
+    "user": {
+        "confirmed_on": null,
+        "date": "2020-10-08 17:00:45.587859",
+        "email": "petergitundu94@gmail.com",
+        "firstname": "Peter",
+        "is_confirmed": false,
+        "lastname": "Gitundu",
+        "password": "pbkdf2:sha256:150000$VLg3eSYv$89fc0b38726aba71947671e081b87cdf0aad1a7485d4e7593d24280fea6f1121",
+        "phone": "0720930988",
+        "user_id": 1,
+        "username": "Peter254"
+    }
+}
+```
+
+<span style="color:royalblue; font-size:18px;">**Try in console**</span>
+
+### Login [POST]
+
++ Request (application/json)
+
+        {
+            "email": "petergitundu94@gmail.com",
+            "password": "Peter20930988!"
+        }
+
++ Response 200 (application/json)
 
     + Body
 
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
+                "message": "Successfully logged in!",
+                "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDIxNjU2NDksIm5iZiI6MTYwMjE2NTY0OSwianRpIjoiZGQ3Y2I1ODAtY2RkNC00ZDBmLWEyYWEtOWQyYWVmMzhjMzM1IiwiZXhwIjoxNjMzNzAxNjQ5LCJpZGVudGl0eSI6InBldGVyZ2l0dW5kdTk0QGdtYWlsLmNvbSIsInR5cGUiOiJyZWZyZXNoIn0.1jXz4Wm8PZE16n2dAz4L7ZYq93J96uaJrIYwLMMsDEU",
+                "status": "200",
+                "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDIxNjU2NDksIm5iZiI6MTYwMjE2NTY0OSwianRpIjoiMTIxZTRiNWQtNWM0MC00NWQwLTkzNWQtNDIwNjZkNzFhZTgzIiwiZXhwIjoxNjMzNzAxNjQ5LCJpZGVudGl0eSI6InBldGVyZ2l0dW5kdTk0QGdtYWlsLmNvbSIsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.UgzHaKg1_CpAVR8r-z_fZZVSZlv-GmatJxOkgbwjtdY",
+                "user": {
+                    "confirmed_on": null,
+                    "date": "2020-10-08 17:00:45.587859",
+                    "email": "petergitundu94@gmail.com",
+                    "firstname": "Peter",
+                    "is_confirmed": false,
+                    "lastname": "Gitundu",
+                    "password": "pbkdf2:sha256:150000$VLg3eSYv$89fc0b38726aba71947671e081b87cdf0aad1a7485d4e7593d24280fea6f1121",
+                    "phone": "0720930988",
+                    "user_id": 1,
+                    "username": "Peter254"
+                }
+            }
+            
+## Access Token [/api/v1/auth/refresh]
+
+`Flask-JWT-Extended` supports `refresh tokens` out of the box. These are `long lived tokens` which can be used to `create new access tokens` once an `old access token has expired`. 
+
+Refresh tokens `cannot access` an endpoint that is `protected` with `jwt_required()` and access tokens `cannot` access and endpoint that is protected with `jwt_refresh_token_required()`.
+
+By setting the access tokens to a `shorter lifetime`, and utilizing refresh tokens we can `help reduce the damage` that can be done if an `access token is stolen`. However, if an `attacker` gets their hands on the refresh token, they `can keep generating` new access tokens and accessing protected endpoints as though he was that user.
+
+The following request should be sent to the following url: `https://njc-school-portal.herokuapp.com/api/v1/auth/staff/refresh`
+
+#### Headers
+
+The following should be passed as the header:
+
+1. `Authorization:` Bearer `<refresh-token>`
+2. `Content-Type:` application/json
+3. `Accept:` application/json
+
+#### Response Data Fields
+
+|Parameter             | Description                                  | Parameter Type | Sample values           |
+|----------------------|----------------------------------------------|----------------|-------------------------|
+|access_token          | token returned | String         | eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...|
+
+**Successful Sample Response**
+
+```
+{
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDIxNjIzMDksIm5iZiI6MTYwMjE2MjMwOSwianRpIjoiNWM3NWFhYjAtOTA3YS00OTExLWFlZDMtNzllODY0OWRlMjdkIiwiZXhwIjoxNjMzNjk4MzA5LCJpZGVudGl0eSI6InBldGVyZ2l0dW5kdTk0QGdtYWlsLmNvbSIsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.j63q-LXzwXcgvvUJkmQ3_xWOHj70oAA6JP4CGTjPFCQ"
+}
+```
+
+<span style="color:royalblue; font-size:18px;">**Try in console**</span>
+
+### Get Access Token [POST]
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Authorization: Bearer <refresh-token>
+            Location: /api/v1/auth/refresh
+
+    + Body
+
+            {
+                "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDIxNjIzMDksIm5iZiI6MTYwMjE2MjMwOSwianRpIjoiNWM3NWFhYjAtOTA3YS00OTExLWFlZDMtNzllODY0OWRlMjdkIiwiZXhwIjoxNjMzNjk4MzA5LCJpZGVudGl0eSI6InBldGVyZ2l0dW5kdTk0QGdtYWlsLmNvbSIsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.j63q-LXzwXcgvvUJkmQ3_xWOHj70oAA6JP4CGTjPFCQ"
+            }
+            
+## Protected Route [/api/v1/auth/protected]
+
+Get the `current user` logged in by their `email`.
+
+The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/auth/staff/protected`
+
+#### Headers
+
+The following should be passed as the header:
+
+1. `Authorization:` Bearer `<token>`
+2. `Content-Type:` application/json
+3. `Accept:` application/json
+
+#### Response Data Fields
+
+|Parameter             | Description                                  | Parameter Type | Sample values           |
+|----------------------|----------------------------------------------|----------------|-------------------------|
+|logged_in_as          | current logged in user | String         | petergitundu44@gmail.com |
+
+**Successful Sample Response**
+
+```
+{
+    "logged_in_as": "petergitundu94@gmail.com"
+}
+```
+
+<span style="color:royalblue; font-size:18px;">**Try in console**</span>
+            
+### Protected  [GET]
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Authorization: Bearer Token
+            Location: /api/v1/auth/protected
+            
+    + Body
+
+            {
+                "logged_in_as": "petergitundu94@gmail.com"
+            }
+            
+## Admin Get Users [/api/v1/users]
+
+This request enables an admin user able to `get a list of all users` that have `created the account`.
+
+The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/auth/staff/users`
+
+#### Headers
+
+The following should be passed as the header:
+
+1. `Authorization:` Bearer `<token>`
+2. `Content-Type:` application/json
+3. `Accept:` application/json
+
+
+#### Response Data Fields
+
+|Parameter             | Description                                  | Parameter Type | Sample values           |
+|----------------------|----------------------------------------------|----------------|-------------------------|
+|message               | message about the request                    | Object         | success |
+|status                | response status code                         | Object         | 200                     |
+|user                  | user account information             | Object         | {...}                 |
+|date            | date when the login request was sent | Date (`TIMESTAMP`) | 2020-07-19 11:25:43.501510 |
+|firstname             | User first name | String         | John                    |
+|lastname              | User last name | String         | Doe                     |
+|username              | Username | String         | Johndoe                 |
+|email                 | User email | String         | johndoe@example.com     |
+|password              | User password hashed password | String | pbkdf2:sha256:150000$Ryqas... |
+|phone                  | User phone number | String         | 0712345678     |
+|user_id              | Autogenerated admin id | Numeric         | 1     |
+|is_confirmed                  | Whether the account has been confirmed           | Boolean         | False     |
+|confirmed_on                  | When the account was confirmed           | Date (`TIMESTAMP`)         | 2020-07-19 11:25:43.501510     |
+
+
+**Successful Sample Response**
+
+```
+{
+    "message": "success",
+    "status": "200",
+    "users": [
+        {
+            "confirmed_on": null,
+            "date": "2020-10-08 16:29:06.390276",
+            "email": "petergitundu94@gmail.com",
+            "firstname": "Peter",
+            "is_confirmed": false,
+            "lastname": "Gitundu",
+            "password": "pbkdf2:sha256:150000$kbccjpIp$2b62aee1b8b4f65c54e20c0f86a14536d0306123b312b44b8f81a44e91691f26",
+            "phone": "0720930988",
+            "user_id": 1,
+            "username": "Peter254"
+        }
+    ]
+}
+```
+
+<span style="color:royalblue; font-size:18px;">**Try in console**</span>
+            
+### Get Users  [GET]
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Authorization: Bearer Token
+            Location: /api/v1/users
+            
+    + Body
+
+            {
+                "message": "success",
+                "status": "200",
+                "users": [
                     {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
+                        "confirmed_on": null,
+                        "date": "2020-10-08 16:29:06.390276",
+                        "email": "petergitundu94@gmail.com",
+                        "firstname": "Peter",
+                        "is_confirmed": false,
+                        "lastname": "Gitundu",
+                        "password": "pbkdf2:sha256:150000$kbccjpIp$2b62aee1b8b4f65c54e20c0f86a14536d0306123b312b44b8f81a44e91691f26",
+                        "phone": "0720930988",
+                        "user_id": 1,
+                        "username": "Peter254"
                     }
                 ]
+            }
+            
+            
+## Get User By Username [/api/v1/users/{username}]
+
+Enable a user able to `get` a `specific user's` details by their `username`.
+
+The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/auth/staff/users/{username}`
+
+```
+Provide the `username` at the end of the url.
+```
+
+#### Headers
+
+The following should be passed as the header:
+
+1. `Authorization:` Bearer `<token>`
+2. `Content-Type:` application/json
+3. `Accept:` application/json
+
+
+#### Response Data Fields
+
+|Parameter             | Description                                  | Parameter Type | Sample values           |
+|----------------------|----------------------------------------------|----------------|-------------------------|
+|message               | message about the request                    | Object         | success |
+|status                | response status code                         | Object         | 200                     |
+|user                  | user account information             | Object         | {...}                 |
+|date            | date when the login request was sent | Date (`TIMESTAMP`) | 2020-07-19 11:25:43.501510 |
+|firstname             | User first name | String         | John                    |
+|lastname              | User last name | String         | Doe                     |
+|username              | Username | String         | Johndoe                 |
+|email                 | User email | String         | johndoe@example.com     |
+|password              | User password hashed password | String | pbkdf2:sha256:150000$Ryqas... |
+|phone                  | User phone number | String         | 0712345678     |
+|user_id              | Autogenerated admin id | Numeric         | 1     |
+|is_confirmed                  | Whether the account has been confirmed           | Boolean         | False     |
+|confirmed_on                  | When the account was confirmed           | Date (`TIMESTAMP`)         | 2020-07-19 11:25:43.501510     |
+
+**Successful Sample Response**
+
+```
+{
+    "message": "success",
+    "status": "200",
+    "user": {
+        "confirmed_on": null,
+        "date": "2020-10-08 16:40:09.520229",
+        "email": "petergitundu94@gmail.com",
+        "firstname": "Peter",
+        "is_confirmed": false,
+        "lastname": "Gitundu",
+        "password": "pbkdf2:sha256:150000$ii73RrIw$63abed9b1d0378368ed91b2f98217961d62558dff3f09e03a2ab48e4eb7036eb",
+        "phone": "0720930988",
+        "user_id": 1,
+        "username": "Peter254"
+    }
+}
+```
+
+<span style="color:royalblue; font-size:18px;">**Try in console**</span>
+
++ Parameters
+    + username (string)
+
+### Get User  [GET]
+
++ Response 200 (application/json)
+
+    + Headers
+    
+            Authorization: Bearer Token
+            Location: /api/v1/auth/staff/users/{username}
+    
+    + Body
+
+            {
+                "message": "success",
+                "status": "200",
+                "user": {
+                    "confirmed_on": null,
+                    "date": "2020-10-08 16:40:09.520229",
+                    "email": "petergitundu94@gmail.com",
+                    "firstname": "Peter",
+                    "is_confirmed": false,
+                    "lastname": "Gitundu",
+                    "password": "pbkdf2:sha256:150000$ii73RrIw$63abed9b1d0378368ed91b2f98217961d62558dff3f09e03a2ab48e4eb7036eb",
+                    "phone": "0720930988",
+                    "user_id": 1,
+                    "username": "Peter254"
+                }
             }
