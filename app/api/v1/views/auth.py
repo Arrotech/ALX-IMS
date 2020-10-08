@@ -108,3 +108,15 @@ def confirm_email(token):
             user_id, is_confirmed=True))
         return render_template("check_email.html")
     return raise_error(404, "User not found")
+
+@auth_v1.route('/auth/refresh', methods=['POST'])
+@jwt_refresh_token_required
+def refresh():
+    """Get the access token."""
+    current_user = get_jwt_identity()
+    expires = datetime.timedelta(days=365)
+    access_token = create_access_token(current_user, expires_delta=expires)
+    ret = {
+        'access_token': access_token
+    }
+    return jsonify(ret), 200
