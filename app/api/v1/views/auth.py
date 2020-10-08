@@ -137,3 +137,20 @@ def get_users():
         "status": "200",
         "users": json.loads(UsersModel().get_users())
     }), 200)
+
+@auth_v1.route('/users/<string:username>', methods=['GET'])
+@jwt_required
+def get_user(username):
+    """Get a specific user by the username."""
+    user = UsersModel().get_username(username)
+    user = json.loads(user)
+    if user:
+        return make_response(jsonify({
+            "message": "success",
+            "status": "200",
+            "user": user
+        }), 200)
+    return make_response(jsonify({
+        "message": "User not found",
+        "status": "404"
+    }), 404)

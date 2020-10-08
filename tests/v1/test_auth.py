@@ -184,3 +184,24 @@ class TestUsersAccount(BaseTest):
         result = json.loads(response.data.decode())
         self.assertEqual(result['message'], 'success')
         assert response.status_code == 200
+
+    def test_get_user(self):
+        """Test get a user by username."""
+        response1 = self.client.post(
+            '/api/v1/auth/register', data=json.dumps(new_account), content_type='application/json',
+            headers=self.get_token())
+        response = self.client.get(
+            '/api/v1/users/Arrotech', content_type='application/json',
+            headers=self.get_token())
+        result = json.loads(response.data.decode())
+        self.assertEqual(result['message'], 'success')
+        assert response.status_code == 200
+
+    def test_get_unexisting_user(self):
+        """Test getting unexisting user."""
+        response = self.client.get(
+            '/api/v1/users/Omondi', content_type='application/json',
+            headers=self.get_token())
+        result = json.loads(response.data.decode())
+        self.assertEqual(result['message'], 'User not found')
+        assert response.status_code == 404
