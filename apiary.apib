@@ -538,3 +538,106 @@ The following should be passed as the header:
                     "username": "Peter254"
                 }
             }
+            
+## Reset [/api/v1/reset]
+
+This request enables user able to `reset password` in case they can't `remember`.
+
+```
+To reset password you must provide an existing email
+```
+
+The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/reset`
+
+#### Headers
+
+The following should be passed as the header:
+
+1. `Content-Type:` application/json
+2. `Accept:` application/json
+
+#### Request Data Fields
+
+|Parameter             | Description                                  | Parameter Type | Sample values           |
+|----------------------|----------------------------------------------|----------------|-------------------------|
+|email                 | email that you registered with (`Mandatory`)           | String         | johndoe@example.com     |
+
+
+**Sample request**
+
+```
+{
+    "email": "petergitundu94@gmail.com"
+}
+```
+
+#### Response Data Fields
+
+|Parameter             | Description                                  | Parameter Type | Sample values           |
+|----------------------|----------------------------------------------|----------------|-------------------------|
+|message               | message about the request                    | Object         | Check your email |
+|status                | response status code                         | Object         | 201                     |
+|token                 | bearer token that should be passed to all future requests | Object         | eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI... |
+
+
+**Successful Sample response**
+
+```
+{
+    "message": "Check your email",
+    "status": "201",
+    "token": "InBldGVyZ2l0dW5kdTk0QGdtYWlsLmNvbSI.X38bqg.OvgFw2fnDrjIvxM__oqQtLX27JQ"
+}
+```
+
+<span style="color:royalblue; font-size:18px;">**Try in console**</span>
+
+### Reset Email [POST]
+
++ Request (application/json)
+
+        {
+            "email": "petergitundu94@gmail.com"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Check your email",
+                "status": "201",
+                "token": "InBldGVyZ2l0dW5kdTk0QGdtYWlsLmNvbSI.X38bqg.OvgFw2fnDrjIvxM__oqQtLX27JQ"
+            }
+            
+## Reset Form [/api/v1/reset/{token}]
+
+This request enables user able to `reset password` in case they can't `remember` by filling in a form. 
+
+```
+To reset password you must provide an existing email
+```
+
+The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/reset/{token}`
+
+#### Headers
+
+The following should be passed as the header:
+
+1. `Content-Type:` application/json
+2. `Accept:` application/json
+
+#### Request Data Fields
+
+|Parameter             | Description                                  | Parameter Type | Sample values           |
+|----------------------|----------------------------------------------|----------------|-------------------------|
+|token                 | reset token that should be passed to reset password | String         | eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI... |
+
+
+#### Response Data Fields
+
+**Successful Sample response**
+
+```
+Returns HTML form with reset password fields
+```
