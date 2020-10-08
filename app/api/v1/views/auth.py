@@ -154,3 +154,43 @@ def get_user(username):
         "message": "User not found",
         "status": "404"
     }), 404)
+
+@auth_v1.route('/reset', methods=["GET", "POST"])
+def reset():
+    details = request.get_json()
+    email = details['email']
+    user = json.loads(UsersModel().get_email(email))
+    if user:
+        token = default_encode_token(email, salt='email-confirm-key')
+        recover_url = generate_url('auth_v1.reset_with_token', token=token)
+        send_email('Password Reset Request',
+                sender='arrotechdesign@gmail.com',
+                recipients=[email],
+                text_body=render_template(
+                    'password_reset_request.txt', recover_url=recover_url),
+                html_body=render_template('password_reset_request.html', recover_url=recover_url))
+        return make_response(jsonify({
+            "message": "Check your email",
+            "status": "201",
+            "token": token
+        }), 201)
+    return raise_error(404, "User not found")
+
+@auth_v1.route('/reset/<token>', methods=["GET", "POST"])
+def reset_with_token(token):
+    try:
+        email = default_decode_token(token, salt='email-confirm-key', expiration=3600)
+    except:
+        return raise_error(404, "User not found")
+    form = PasswordForm()
+    if form.validate_on_submit():
+        user = json.loads(UsersModel().get_email(email))
+        user_id = user['user_id']
+        if user:
+            password = form.password.data
+            password_hash = generate_password_hash(password)
+            json.loads(UsersModel().reset_password(
+                password_hash, user_id))
+            return render_template('reset_success.html')
+        return raise_error(404, "User not found")
+    return render_template('reset_form.html', form=form, token=token)
