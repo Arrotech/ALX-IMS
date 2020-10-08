@@ -127,3 +127,13 @@ def protected():
     """Access the protected route."""
     email = get_jwt_identity()
     return jsonify(logged_in_as=email), 200
+
+@auth_v1.route('/users', methods=['GET'])
+@jwt_required
+def get_users():
+    """Get all users."""
+    return make_response(jsonify({
+        "message": "success",
+        "status": "200",
+        "users": json.loads(UsersModel().get_users())
+    }), 200)

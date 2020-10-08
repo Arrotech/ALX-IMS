@@ -172,3 +172,15 @@ class TestUsersAccount(BaseTest):
         response1 = self.client.get(
             '/api/v1/auth/protected', content_type='application/json', headers=self.get_token())
         assert response1.status_code == 200
+
+    def test_get_users(self):
+        """Test get all users."""
+        response1 = self.client.post(
+            '/api/v1/auth/register', data=json.dumps(new_account), content_type='application/json',
+            headers=self.get_token())
+        response = self.client.get(
+            '/api/v1/users', content_type='application/json',
+            headers=self.get_token())
+        result = json.loads(response.data.decode())
+        self.assertEqual(result['message'], 'success')
+        assert response.status_code == 200
