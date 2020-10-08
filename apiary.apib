@@ -272,7 +272,7 @@ Refresh tokens `cannot access` an endpoint that is `protected` with `jwt_require
 
 By setting the access tokens to a `shorter lifetime`, and utilizing refresh tokens we can `help reduce the damage` that can be done if an `access token is stolen`. However, if an `attacker` gets their hands on the refresh token, they `can keep generating` new access tokens and accessing protected endpoints as though he was that user.
 
-The following request should be sent to the following url: `https://njc-school-portal.herokuapp.com/api/v1/auth/staff/refresh`
+The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/auth/refresh`
 
 #### Headers
 
@@ -317,7 +317,7 @@ The following should be passed as the header:
 
 Get the `current user` logged in by their `email`.
 
-The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/auth/staff/protected`
+The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/auth/protected`
 
 #### Headers
 
