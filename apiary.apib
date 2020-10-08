@@ -358,11 +358,11 @@ The following should be passed as the header:
                 "logged_in_as": "petergitundu94@gmail.com"
             }
             
-## Admin Get Users [/api/v1/users]
+## Get Users [/api/v1/users]
 
 This request enables an admin user able to `get a list of all users` that have `created the account`.
 
-The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/auth/staff/users`
+The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/users`
 
 #### Headers
 
@@ -452,7 +452,7 @@ The following should be passed as the header:
 
 Enable a user able to `get` a `specific user's` details by their `username`.
 
-The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/auth/staff/users/{username}`
+The following request should be sent to the following url: `https://alx-ims.herokuapp.com/api/v1/users/{username}`
 
 ```
 Provide the `username` at the end of the url.
@@ -518,7 +518,7 @@ The following should be passed as the header:
     + Headers
     
             Authorization: Bearer Token
-            Location: /api/v1/auth/staff/users/{username}
+            Location: /api/v1/auth/users/{username}
     
     + Body
 
