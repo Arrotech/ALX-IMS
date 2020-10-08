@@ -129,3 +129,30 @@ class TestUsersAccount(BaseTest):
         result = json.loads(response.data.decode())
         assert response.status_code == 404
         assert result['message'] == "resource not found"
+
+    def test_login_with_wrong_password(self):
+        """Test that a user cannot login with unhashed password."""
+        response = self.client.post(
+            '/api/v1/auth/login', data=json.dumps(unhashed_password), content_type='application/json',
+            headers=self.get_token())
+        result = json.loads(response.data.decode())
+        self.assertEqual(result['message'], 'Invalid Email or Password')
+        assert response.status_code == 401
+
+    def test_login_keys(self):
+        """Test login json keys."""
+        response = self.client.post(
+            '/api/v1/auth/login', data=json.dumps(wrong_login_keys), content_type='application/json',
+            headers=self.get_token())
+        result = json.loads(response.data.decode())
+        self.assertEqual(result['message'], 'Invalid email key')
+        assert response.status_code == 400
+
+    def test_login_with_wrong_email(self):
+        """Test login with wrong email."""
+        response1 = self.client.post(
+            '/api/v1/auth/login', data=json.dumps(wrong_email_login), content_type='application/json',
+            headers=self.get_token())
+        result = json.loads(response1.data.decode())
+        self.assertEqual(result['message'], 'Invalid Email or Password')
+        assert response1.status_code == 401
