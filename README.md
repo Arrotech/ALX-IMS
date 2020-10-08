@@ -67,8 +67,10 @@ Use the following button to run the app from a postman copy collection.
 
 1.  Heroku deployment of the application: [Heroku](https://alx-ims.herokuapp.com/)
 2.  Continuous Integration: [TravisCI](https://travis-ci.com/github/Arrotech/ALX-IMS)
-2.  Test coverage: [Coveralls](https://coveralls.io/github/Arrotech/ALX-IMS)
-2.  Test coverage: [CodeCov](https://codecov.io/gh/Arrotech/ALX-IMS)
+3.  Test coverage: [Coveralls](https://coveralls.io/github/Arrotech/ALX-IMS)
+4.  Test coverage: [CodeCov](https://codecov.io/gh/Arrotech/ALX-IMS)
+5.  Code Documentation: [Apiary](https://alxims.docs.apiary.io/)
+
 
 ## Contributors
 
