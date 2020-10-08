@@ -67,3 +67,12 @@ class UsersModel(Database):
         query = "SELECT * from users"
         users = Database().fetch(query)
         return json.dumps(users, default=str)
+
+    def reset_password(self, user_id, password):
+        """Reset user password."""
+        self.curr.execute(
+            """UPDATE users SET password='{}' WHERE user_id={} RETURNING password""".format(user_id, password))
+        response = self.curr.fetchone()
+        self.conn.commit()
+        self.curr.close()
+        return json.dumps(response, default=str)

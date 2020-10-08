@@ -205,3 +205,21 @@ class TestUsersAccount(BaseTest):
         result = json.loads(response.data.decode())
         self.assertEqual(result['message'], 'User not found')
         assert response.status_code == 404
+
+    def test_reset_email(self):
+        """Test that a user can provide an existing email to request for password reset."""
+        response = self.client.post(
+            '/api/v1/reset', data=json.dumps(reset_email), content_type='application/json',
+            headers=self.get_token())
+        result = json.loads(response.data.decode())
+        self.assertEqual(result['message'], 'Check your email')
+        assert response.status_code == 201
+
+    def test_unexisting_reset_email(self):
+        """Test that a user can provide an existing email to request for password reset."""
+        response = self.client.post(
+            '/api/v1/reset', data=json.dumps(unexisting_reset_email), content_type='application/json',
+            headers=self.get_token())
+        result = json.loads(response.data.decode())
+        self.assertEqual(result['message'], 'User not found')
+        assert response.status_code == 404
